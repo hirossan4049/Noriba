@@ -5,7 +5,9 @@ import NoribaUI
 struct NoribaApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationView {
+                SearchView()
+            }
         }
     }
 }
