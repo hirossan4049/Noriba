@@ -54,7 +54,7 @@ public struct SearchView: View {
         } label: {
             Text("のぞみ")
                 .fontWeight(.bold)
-                .foregroundColor(.black)
+                .foregroundColor(Color("Label"))
                 .frame(maxWidth: .infinity, maxHeight: 24, alignment: .leading)
                 .padding()
         }
@@ -71,7 +71,7 @@ public struct SearchView: View {
         } label: {
             Text("新大阪")
                 .fontWeight(.bold)
-                .foregroundColor(.black)
+                .foregroundColor(Color("Label"))
                 .frame(maxWidth: .infinity, maxHeight: 24, alignment: .leading)
                 .padding()
         }
