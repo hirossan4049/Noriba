@@ -3,13 +3,14 @@ import SwiftUI
 public struct SearchView: View {
     @State private var vehicleNumber = ""
     @FocusState private var focusedField: Field?
+    @State private var isPresentVehicleResultView = false
     
     enum Field: Hashable {
         case vehicleNumber
     }
     
     public init() {}
-
+    
     public var body: some View {
         VStack(spacing: 24) {
             Spacer()
@@ -79,7 +80,7 @@ public struct SearchView: View {
     
     private var searchButton: some View {
         Button {
-            
+            isPresentVehicleResultView = true
         } label: {
             Text("検索")
                 .fontWeight(.bold)
@@ -88,7 +89,13 @@ public struct SearchView: View {
                 .padding()
                 .background(Color.pink.cornerRadius(8))
         }
-
+        .background(
+            NavigationLink(
+                destination: VehicleResultView(),
+                isActive: $isPresentVehicleResultView,
+                label: { EmptyView() })
+        )
+        
     }
 }
 
