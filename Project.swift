@@ -59,7 +59,7 @@ private func makeFrameworkTargets(name: String, platform: Platform) -> [Target] 
 private func makeAppTargets(name: String, platform: Platform, dependencies: [TargetDependency]) -> [Target] {
     let platform: Platform = platform
     let infoPlist: [String: InfoPlist.Value] = [
-        "CFBundleShortVersionString": "1.0",
+        "CFBundleShortVersionString": "0.0.1",
         "CFBundleVersion": "1",
         "CFBundleDisplayName": "のりば検索",
         "UIMainStoryboardFile": "",
