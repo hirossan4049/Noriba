@@ -7,34 +7,34 @@
 
 import Foundation
 
-struct DepartureInfo: Codable {
-    let suspensionInfoIsEnabled: Bool
-    let departureInfo: DepartureInfo
+public struct DepartureInfo: Codable {
+    public let suspensionInfoIsEnabled: Bool
+    public let departureInfo: DepartureInfo
     
-    struct DepartureInfo: Codable {
-        let datetime: Int
-        let data: [Data]
+    public struct DepartureInfo: Codable {
+        public let datetime: Int
+        public let data: [Data]
         
-        struct Data: Codable {
-            let train: Train
-            let trainNumber: String
-            let departureTime: Int
-            let undecidedTimeFlag: Bool
-            let expactation: Int?
-            let delay: [Int]
-            let track: Int // のりば x番線
-            let terminalStation: String
-            let stations: [Station]
-            let startingStationFlag: Bool
-            let departureFlag: Bool
-//            let remark:
-            let alternativeTrain: String
-            let alternativeTrainNumber: String
-//            let stopInfo
-            let departureOrder: Int
-            let partialSuspensionFlag: Bool
+        public struct Data: Codable, Hashable {
+            public let train: Train
+            public let trainNumber: String
+            public let departureTime: Int
+            public let undecidedTimeFlag: Bool
+            public let expactation: Int?
+            public let delay: [Int]
+            public let track: Int // のりば x番線
+            public let terminalStation: Station
+            public let stations: [Station]
+            public let startingStationFlag: Bool
+            public let departureFlag: Bool
+            //          public   let remark:
+            public let alternativeTrain: String
+            public let alternativeTrainNumber: String
+            //          public   let stopInfo
+            public let departureOrder: Int
+            public let partialSuspensionFlag: Bool
             
-            enum Train: String, Codable {
+            public enum Train: String, Codable {
                 case hikari = "1"
                 case kodama = "2"
                 case nozomi = "6"
@@ -45,7 +45,7 @@ struct DepartureInfo: Codable {
                 case tubame = "12"
                 case unknown = "255"
                 
-                var jaName: String {
+                public var jaName: String {
                     switch self {
                     case .hikari:
                         return "ひかり"
@@ -69,7 +69,7 @@ struct DepartureInfo: Codable {
                 }
             }
             
-            enum Station: String, Codable {
+            public enum Station: String, Codable {
                 case tokyo = "1"
                 case shinagawa = "2"
                 case shinyokohama = "3"
@@ -116,6 +116,103 @@ struct DepartureInfo: Codable {
                 case izumi = "54"
                 case sendai = "55"
                 case kagoshimachuo = "56"
+                
+                public var stationName: String {
+                    switch self {
+                    case .tokyo:
+                        return "東京"
+                    case .shinagawa:
+                        return "品川"
+                    case .shinyokohama:
+                        return "新横浜"
+                    case .odawara:
+                        return "小田原"
+                    case .atami:
+                        return "熱海"
+                    case .mishima:
+                        return "三島"
+                    case .shinfuji:
+                        return "新富士"
+                    case .shizuoka:
+                        return "静岡"
+                    case .kakegawa:
+                        return "掛川"
+                    case .hamamatsu:
+                        return "浜松"
+                    case .toyohashi:
+                        return "豊橋"
+                    case .mikawaanjo:
+                        return "三河安城"
+                    case .nagoya:
+                        return "名古屋"
+                    case .gifuhashima:
+                        return "岐阜羽島"
+                    case .maibara:
+                        return "米原"
+                    case .kyoto:
+                        return "京都"
+                    case .shinosaka:
+                        return "新大阪"
+                    case .shinkobe:
+                        return "新神戸"
+                    case .nishiakashi:
+                        return "西明石"
+                    case .himeji:
+                        return "姫路"
+                    case .aisho:
+                        return "相生"
+                    case .okayama:
+                        return "岡山"
+                    case .shinkurashiki:
+                        return "新倉敷"
+                    case .hukuyama:
+                        return "福山"
+                    case .shinomichi:
+                        return "新尾道"
+                    case .mihara:
+                        return "三原"
+                    case .higashihiroshima:
+                        return "東広島"
+                    case .hiroshima:
+                        return "広島"
+                    case .shiniwakoku:
+                        return "新岩国"
+                    case .tokuyama:
+                        return "徳山"
+                    case .shinyamaguchi:
+                        return "新山口"
+                    case .asa:
+                        return "厚狭"
+                    case .shinshimonoseki:
+                        return "新下関"
+                    case .ogura:
+                        return "小倉"
+                    case .hakata:
+                        return "博多"
+                    case .shintosu:
+                        return "新鳥栖"
+                    case .kurume:
+                        return "久留米"
+                    case .chikugofunagawa:
+                        return "筑後船小屋"
+                    case .shinomuta:
+                        return "新大牟田"
+                    case .shintanama:
+                        return "新玉名"
+                    case .kumamoto:
+                        return "熊本"
+                    case .shinyatsushiro:
+                        return "新八代"
+                    case .shinmizumata:
+                        return "新水俣"
+                    case .izumi:
+                        return "出水"
+                    case .sendai:
+                        return "川内"
+                    case .kagoshimachuo:
+                        return "鹿児島中央"
+                    }
+                }
             }
         }
     }

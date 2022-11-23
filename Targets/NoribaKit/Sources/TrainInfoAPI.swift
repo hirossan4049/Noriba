@@ -22,13 +22,13 @@ public final class TrainInfoAPI {
         self.behave = behave
     }
     
-    public func fetchDepartureInfo() async throws {
+    public func fetchDepartureInfo() async throws -> DepartureInfo {
 //        let (data, _) = try await request(url: "")
         
         let data = TrainInfoAPIMocks.fetchDepartureInfoString.data(using: .utf8)!
         
         let decoder = JSONDecoder()
-        dump(try! decoder.decode(DepartureInfo.self, from: data))
+        return try! decoder.decode(DepartureInfo.self, from: data)
         
     }
     

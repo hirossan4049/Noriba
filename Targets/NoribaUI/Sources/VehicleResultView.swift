@@ -6,10 +6,14 @@
 //
 
 import SwiftUI
+import NoribaKit
 
 struct VehicleResultView: View {
     
-    public init() {}
+    let trainNumber: String
+    let departureInfo: DepartureInfo?
+    
+    //    public init(trainNumber: String, departureInfo: DepartureInfo?) {}
     
     var body: some View {
         VStack {
@@ -18,6 +22,16 @@ struct VehicleResultView: View {
             ticket
                 .padding(.horizontal, 8)
             annotationLabel
+            
+            List(departureInfo!.departureInfo.data, id: \.self) { data in
+                timetableCell(data: data)
+                    .listRowInsets(EdgeInsets())
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 4)
+                    .listRowSeparator(.hidden)
+            }
+            .listStyle(.plain)
+            
             Spacer()
         }
         .navigationTitle("新幹線のりば検索結果")
@@ -60,12 +74,69 @@ struct VehicleResultView: View {
             .font(.system(size: 9, weight: .bold))
             .foregroundColor(.gray)
     }
-}
-
-#if DEBUG
-struct VehicleResultView_Previews: PreviewProvider {
-    static var previews: some View {
-        VehicleResultView()
+    
+    func timetableCell(data: DepartureInfo.DepartureInfo.Data) -> some View {
+        print(data)
+        return HStack {
+            Text("\(data.train.jaName) \(data.trainNumber)号")
+                .frame(width: 100, alignment: .leading)
+            Text("\(data.terminalStation.stationName)行")
+            Spacer()
+            Text("\(data.track)番線")
+            Text("\(String(data.departureTime / 60).leftPadding(toLength: 2, withPad: "0")):\(String(data.departureTime % 60).leftPadding(toLength: 2, withPad: "0"))")
+        }
+        .padding(8)
+        .frame(maxWidth: .infinity, maxHeight: 48)
+        .background(data.train.color.cornerRadius(8))
     }
 }
-#endif
+
+extension DepartureInfo.DepartureInfo.Data.Train {
+    public var color: Color {
+        switch self {
+        case .hikari:
+            return .red
+        case .kodama:
+            return .blue
+        case .nozomi:
+            return .yellow
+        case .dantai:
+            return .gray
+        case .kaisou:
+            return .gray
+        case .mizuho:
+            return .blue
+        case .sakura:
+            return .pink
+        case .tubame:
+            return .pink
+        case .unknown:
+            return .gray
+        }
+    }
+}
+
+extension String {
+      func leftPadding(toLength: Int, withPad: String) -> String {
+        let stringLength = self.count
+        if stringLength < toLength {
+            return String(repeating:withPad, count: toLength - stringLength) + self
+        } else {
+            return String(self.suffix(toLength))
+        }
+    }
+}
+
+//#if DEBUG
+//struct VehicleResultView_Previews: PreviewProvider {
+//    @State private static var departureInfo: DepartureInfo? = nil
+//
+//    static var previews: some View {
+//        if let departureInfo = departureInfo {
+//            return VehicleResultView(trainNumber: "247", departureInfo: departureInfo)
+//        } else {
+//            return Text("Parse Error")
+//        }
+//    }
+//}
+//#endif
