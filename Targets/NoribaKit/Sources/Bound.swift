@@ -16,7 +16,7 @@ enum Bound: String, CaseIterable {
         case .hakata:
             return "博多方面（下り）"
         case .tokyo:
-            return "東京方面（のぼり）"
+            return "東京方面（上り）"
         }
     }
 }
