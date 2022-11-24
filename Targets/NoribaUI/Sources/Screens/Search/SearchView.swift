@@ -2,32 +2,17 @@ import SwiftUI
 import NoribaKit
 
 public struct SearchView: View {
-    @State private var vehicleNumber = ""
+    @ObservedObject private var viewModel: SearchViewModel
     @FocusState private var focusedField: Field?
-    @State private var bound: Bound = .hakata
-    @State private var isPresentVehicleResultView = false
     @State private var departureInfo: DepartureInfo? = nil
-    
-    enum Bound: String, CaseIterable, Identifiable {
-        case hakata = "hakata"
-        case tokyo = "tokyo"
-        
-        var id: String { rawValue }
-        
-        var title: String {
-            switch self {
-            case .hakata:
-                return "博多方面（下り）"
-            case .tokyo:
-                return "東京方面（のぼり）"
-            }
-        }
-    }
+
     enum Field: Hashable {
         case vehicleNumber
     }
     
-    public init() {}
+    public init() {
+        self.viewModel = SearchViewModel()
+    }
     
     public var body: some View {
         VStack(spacing: 24) {
@@ -52,7 +37,7 @@ public struct SearchView: View {
     }
     
     private var vehicleTextField: some View {
-        TextField("車両番号", text: $vehicleNumber)
+        TextField("車両番号", text: $viewModel.uiState.vehicleNumber)
             .keyboardType(.numberPad)
             .focused($focusedField, equals: .vehicleNumber)
             .frame(maxWidth: .infinity, maxHeight: 24, alignment: .leading)
@@ -63,16 +48,16 @@ public struct SearchView: View {
     
     private var boundPickerView: some View {
         Menu {
-            Picker(selection: $bound,
+            Picker(selection: $viewModel.uiState.currentBound,
                 label: EmptyView(),
                 content: {
-                ForEach(Bound.allCases) { bound in
+                ForEach(viewModel.uiState.bounds) { bound in
                     Text(bound.title).tag(bound)
                 }
                 }).pickerStyle(.automatic)
                    .accentColor(.white)
             } label: {
-                Text(bound.title)
+                Text(viewModel.uiState.currentBound.title)
                     .fontWeight(.bold)
                     .foregroundColor(Color("Label"))
                     .frame(maxWidth: .infinity, maxHeight: 24, alignment: .leading)
@@ -100,7 +85,7 @@ public struct SearchView: View {
     
     private var searchButton: some View {
         Button {
-            isPresentVehicleResultView = true
+            viewModel.onSearchTapped()
         } label: {
             Text("検索")
                 .fontWeight(.bold)
@@ -111,8 +96,9 @@ public struct SearchView: View {
         }
         .background(
             NavigationLink(
-                destination: VehicleResultView(trainNumber: vehicleNumber, departureInfo: departureInfo),
-                isActive: $isPresentVehicleResultView,
+                destination: VehicleResultView(trainNumber: viewModel.uiState.vehicleNumber,
+                                               departureInfo: departureInfo),
+                isActive: $viewModel.uiState.isPresentVehicleResultView,
                 label: { EmptyView() })
         )
         
