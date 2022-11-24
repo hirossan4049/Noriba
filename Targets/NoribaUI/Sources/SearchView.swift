@@ -4,9 +4,25 @@ import NoribaKit
 public struct SearchView: View {
     @State private var vehicleNumber = ""
     @FocusState private var focusedField: Field?
+    @State private var bound: Bound = .hakata
     @State private var isPresentVehicleResultView = false
     @State private var departureInfo: DepartureInfo? = nil
     
+    enum Bound: String, CaseIterable, Identifiable {
+        case hakata = "hakata"
+        case tokyo = "tokyo"
+        
+        var id: String { rawValue }
+        
+        var title: String {
+            switch self {
+            case .hakata:
+                return "博多方面（下り）"
+            case .tokyo:
+                return "東京方面（のぼり）"
+            }
+        }
+    }
     enum Field: Hashable {
         case vehicleNumber
     }
@@ -19,8 +35,8 @@ public struct SearchView: View {
                 .frame(height: 18)
             
             vehicleTextField
-            vehicleTypeMenu
             stationNameMenu
+            boundPickerView
             searchButton
             Spacer()
         }
@@ -45,25 +61,24 @@ public struct SearchView: View {
             .background(Color("TextFieldColor"))
     }
     
-    private var vehicleTypeMenu: some View {
+    private var boundPickerView: some View {
         Menu {
-            Button("ひかり", action: {})
-            Button("こだま", action: {})
-            Button("のぞみ", action: {})
-            Button("団体", action: {})
-            Button("回送", action: {})
-            Button("みずほ", action: {})
-            Button("さくら", action: {})
-            Button("つばめ", action: {})
-            Button("未設定", action: {})
-        } label: {
-            Text("のぞみ")
-                .fontWeight(.bold)
-                .foregroundColor(Color("Label"))
-                .frame(maxWidth: .infinity, maxHeight: 24, alignment: .leading)
-                .padding()
+            Picker(selection: $bound,
+                label: EmptyView(),
+                content: {
+                ForEach(Bound.allCases) { bound in
+                    Text(bound.title).tag(bound)
+                }
+                }).pickerStyle(.automatic)
+                   .accentColor(.white)
+            } label: {
+                Text(bound.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(Color("Label"))
+                    .frame(maxWidth: .infinity, maxHeight: 24, alignment: .leading)
+                    .padding()
         }
-        .background(Color("TextFieldColor"))
+            .background(Color("TextFieldColor"))
     }
     
     private var stationNameMenu: some View {
