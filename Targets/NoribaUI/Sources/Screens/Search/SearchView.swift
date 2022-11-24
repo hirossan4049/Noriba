@@ -18,8 +18,8 @@ public struct SearchView: View {
                 .frame(height: 18)
             
             vehicleTextField
-            stationNameMenu
-            boundPickerView
+            stationNamePickerMenu
+            boundPickerMenu
             searchButton
             Spacer()
         }
@@ -41,7 +41,7 @@ public struct SearchView: View {
             .background(Color("TextFieldColor"))
     }
     
-    private var boundPickerView: some View {
+    private var boundPickerMenu: some View {
         Menu {
             Picker(selection: $viewModel.currentBound,
                    label: EmptyView(),
@@ -61,7 +61,7 @@ public struct SearchView: View {
         .background(Color("TextFieldColor"))
     }
     
-    private var stationNameMenu: some View {
+    private var stationNamePickerMenu: some View {
         Menu {
             Picker(selection: $viewModel.currentStation,
                    label: EmptyView(),
