@@ -11,16 +11,16 @@ import Combine
 // MARK: Input Protocol
 @MainActor
 protocol SearchViewModelInput: ObservableObject {
-    var uiState: SearchViewInputUiState { get set }
-
     func onSearchTapped()
 }
 
-// MARK: UI State
-final class SearchViewInputUiState: ObservableObject {
+@MainActor
+final class SearchViewModel: ObservableObject {
+    
+    // MARK: UI State
     @Published var vehicleNumber: String = ""
+    @Published var isPresentVehicleResultView = false
     var currentBound: Bound = .hakata
-    var isPresentVehicleResultView = false
     let bounds = Bound.allCases
     
     enum Bound: String, CaseIterable, Identifiable {
@@ -41,19 +41,14 @@ final class SearchViewInputUiState: ObservableObject {
     enum Field: Hashable {
         case vehicleNumber
     }
-}
-
-@MainActor
-final class SearchViewModel: ObservableObject {
-    @Published var uiState: SearchViewInputUiState // private(set)にしたい
     
     init() {
-        self.uiState = SearchViewInputUiState()
     }
 }
 
 extension SearchViewModel: SearchViewModelInput {
     func onSearchTapped() {
-        uiState.isPresentVehicleResultView = true
+        print("ONTAPPED")
+        isPresentVehicleResultView = true
     }
 }

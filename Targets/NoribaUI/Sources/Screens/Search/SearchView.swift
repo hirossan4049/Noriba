@@ -37,7 +37,7 @@ public struct SearchView: View {
     }
     
     private var vehicleTextField: some View {
-        TextField("車両番号", text: $viewModel.uiState.vehicleNumber)
+        TextField("車両番号", text: $viewModel.vehicleNumber)
             .keyboardType(.numberPad)
             .focused($focusedField, equals: .vehicleNumber)
             .frame(maxWidth: .infinity, maxHeight: 24, alignment: .leading)
@@ -48,16 +48,16 @@ public struct SearchView: View {
     
     private var boundPickerView: some View {
         Menu {
-            Picker(selection: $viewModel.uiState.currentBound,
+            Picker(selection: $viewModel.currentBound,
                 label: EmptyView(),
                 content: {
-                ForEach(viewModel.uiState.bounds) { bound in
+                ForEach(viewModel.bounds) { bound in
                     Text(bound.title).tag(bound)
                 }
                 }).pickerStyle(.automatic)
                    .accentColor(.white)
             } label: {
-                Text(viewModel.uiState.currentBound.title)
+                Text(viewModel.currentBound.title)
                     .fontWeight(.bold)
                     .foregroundColor(Color("Label"))
                     .frame(maxWidth: .infinity, maxHeight: 24, alignment: .leading)
@@ -96,9 +96,9 @@ public struct SearchView: View {
         }
         .background(
             NavigationLink(
-                destination: VehicleResultView(trainNumber: viewModel.uiState.vehicleNumber,
+                destination: VehicleResultView(trainNumber: viewModel.vehicleNumber,
                                                departureInfo: departureInfo),
-                isActive: $viewModel.uiState.isPresentVehicleResultView,
+                isActive: $viewModel.isPresentVehicleResultView,
                 label: { EmptyView() })
         )
         
