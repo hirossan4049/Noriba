@@ -38,12 +38,8 @@ final class SearchViewModel: ObservableObject {
             }
         }
     }
-    enum Field: Hashable {
-        case vehicleNumber
-    }
     
-    init() {
-    }
+    init() { }
 }
 
 extension SearchViewModel: SearchViewModelInput {
