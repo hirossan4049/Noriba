@@ -12,8 +12,14 @@ struct VehicleResultView: View {
     
     let trainNumber: String
     let departureInfo: DepartureInfo?
+    private let resultTrainData: DepartureInfo.DepartureInfo.Data?
     
-    //    public init(trainNumber: String, departureInfo: DepartureInfo?) {}
+    public init(trainNumber: String, departureInfo: DepartureInfo?) {
+        self.trainNumber = trainNumber
+        self.departureInfo = departureInfo
+        self.resultTrainData = departureInfo?.departureInfo.data.first(where: { $0.trainNumber == trainNumber })
+
+    }
     
     var body: some View {
         VStack {
@@ -43,28 +49,33 @@ struct VehicleResultView: View {
                 .resizable()
                 .frame(maxWidth: .infinity, maxHeight: 164)
 
-            VStack {
-                Spacer()
-                Text("のぞみ235号 東京行")
-                    .font(.system(size: 18, weight: .bold))
-                Spacer()
-                
-                Text("新大阪駅")
-                    .font(.system(size: 18, weight: .bold))
-                
-                HStack {
-                    Text("24番線")
-                        .font(.system(size: 34, weight: .bold))
-                    Text("※")
-                        .font(.system(size: 20))
-                        .frame(height: 30,alignment: .bottom)
+            if let resultTrainData {
+                VStack {
+                    Spacer()
+                    Text("\(resultTrainData.train.jaName)\(resultTrainData.trainNumber)号 \(resultTrainData.terminalStation.stationName)行")
+                        .font(.system(size: 18, weight: .bold))
+                    Spacer()
+                    
+                    Text("新大阪駅")
+                        .font(.system(size: 18, weight: .bold))
+                    
+                    HStack {
+                        Text("\(resultTrainData.track)番線")
+                            .font(.system(size: 34, weight: .bold))
+                        Text("※")
+                            .font(.system(size: 20))
+                            .frame(height: 30,alignment: .bottom)
+                    }
+                    
+                    Text(unixtimeToDate(unixtime: departureInfo?.departureInfo.datetime ?? 0))
+                        .font(.system(size: 14, weight: .bold))
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                
-                Text("2022年11月23日")
-                    .font(.system(size: 14, weight: .bold))
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(8)
+            } else {
+                Text("存在しません")
+                    .font(.system(size: 18, weight: .bold))
             }
-            .padding(8)
         }
         .frame(maxWidth: .infinity, maxHeight: 164)
     }
@@ -87,6 +98,17 @@ struct VehicleResultView: View {
         .padding(8)
         .frame(maxWidth: .infinity, maxHeight: 48)
         .background(data.train.color.cornerRadius(8))
+    }
+    
+    func unixtimeToDate(unixtime: Int) -> String {
+        let date = Date(timeIntervalSince1970: TimeInterval(unixtime))
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy年MM月dd日"
+        return formatter.string(from: date)
+    }
+    
+    func getTrainNumberToData(trainNumber: String, departureInfo info: DepartureInfo?) -> DepartureInfo.DepartureInfo.Data? {
+        info?.departureInfo.data.first(where: { $0.trainNumber == trainNumber })
     }
 }
 
