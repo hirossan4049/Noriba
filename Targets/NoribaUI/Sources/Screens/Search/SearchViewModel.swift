@@ -22,26 +22,10 @@ final class SearchViewModel: ObservableObject {
     @Published var vehicleNumber: String = ""
     @Published var isPresentVehicleResultView = false
     @Published var departureInfo: DepartureInfo? = nil
-    var currentBound: Bound = .hakata
+    @Published var currentBound: Bound = .hakata
+    @Published var currentStation: DepartureInfo.DepartureInfo.Data.Station = .shinosaka
     let bounds = Bound.allCases
-    var currentStation: DepartureInfo.DepartureInfo.Data.Station = .shinosaka
     let stations = DepartureInfo.DepartureInfo.Data.Station.sortedMajorStations
-    
-    enum Bound: String, CaseIterable, Identifiable {
-        case hakata = "hakata"
-        case tokyo = "tokyo"
-        
-        var id: String { rawValue }
-        
-        var title: String {
-            switch self {
-            case .hakata:
-                return "博多方面（下り）"
-            case .tokyo:
-                return "東京方面（のぼり）"
-            }
-        }
-    }
     
     init() {
         Task {
@@ -57,5 +41,9 @@ extension SearchViewModel: SearchViewModelInput {
 }
 
 extension DepartureInfo.DepartureInfo.Data.Station: Identifiable {
+    public var id: String { rawValue }
+}
+
+extension Bound: Identifiable {
     public var id: String { rawValue }
 }
