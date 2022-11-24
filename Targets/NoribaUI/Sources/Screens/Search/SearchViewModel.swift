@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import NoribaKit
 
 // MARK: Input Protocol
 @MainActor
@@ -22,6 +23,8 @@ final class SearchViewModel: ObservableObject {
     @Published var isPresentVehicleResultView = false
     var currentBound: Bound = .hakata
     let bounds = Bound.allCases
+    var currentStation: DepartureInfo.DepartureInfo.Data.Station = .shinosaka
+    let stations = DepartureInfo.DepartureInfo.Data.Station.sortedMajorStations
     
     enum Bound: String, CaseIterable, Identifiable {
         case hakata = "hakata"
@@ -43,8 +46,11 @@ final class SearchViewModel: ObservableObject {
 }
 
 extension SearchViewModel: SearchViewModelInput {
-    func onSearchTapped() {
-        print("ONTAPPED")
+    func onSearchTapped() {        
         isPresentVehicleResultView = true
     }
+}
+
+extension DepartureInfo.DepartureInfo.Data.Station: Identifiable {
+    public var id: String { rawValue }
 }

@@ -5,7 +5,7 @@ public struct SearchView: View {
     @ObservedObject private var viewModel: SearchViewModel
     @FocusState private var focusedField: Field?
     @State private var departureInfo: DepartureInfo? = nil
-
+    
     enum Field: Hashable {
         case vehicleNumber
     }
@@ -49,32 +49,34 @@ public struct SearchView: View {
     private var boundPickerView: some View {
         Menu {
             Picker(selection: $viewModel.currentBound,
-                label: EmptyView(),
-                content: {
+                   label: EmptyView(),
+                   content: {
                 ForEach(viewModel.bounds) { bound in
                     Text(bound.title).tag(bound)
                 }
-                }).pickerStyle(.automatic)
-                   .accentColor(.white)
-            } label: {
-                Text(viewModel.currentBound.title)
-                    .fontWeight(.bold)
-                    .foregroundColor(Color("Label"))
-                    .frame(maxWidth: .infinity, maxHeight: 24, alignment: .leading)
-                    .padding()
+            }).pickerStyle(.automatic)
+                .accentColor(.white)
+        } label: {
+            Text(viewModel.currentBound.title)
+                .fontWeight(.bold)
+                .foregroundColor(Color("Label"))
+                .frame(maxWidth: .infinity, maxHeight: 24, alignment: .leading)
+                .padding()
         }
-            .background(Color("TextFieldColor"))
+        .background(Color("TextFieldColor"))
     }
     
     private var stationNameMenu: some View {
         Menu {
-            Button("新大阪", action: {})
-            Button("京都", action: {})
-            Button("新横浜", action: {})
-            Button("品川", action: {})
-            Button("東京", action: {})
+            Picker(selection: $viewModel.currentStation,
+                   label: EmptyView(),
+                   content: {
+                ForEach(viewModel.stations) { station in
+                    Text(station.stationName).tag(station)
+                }
+            })
         } label: {
-            Text("新大阪")
+            Text(viewModel.currentStation.stationName)
                 .fontWeight(.bold)
                 .foregroundColor(Color("Label"))
                 .frame(maxWidth: .infinity, maxHeight: 24, alignment: .leading)

@@ -69,7 +69,7 @@ public struct DepartureInfo: Codable {
                 }
             }
             
-            public enum Station: String, Codable {
+            public enum Station: String, Codable, CaseIterable {
                 case tokyo = "1"
                 case shinagawa = "2"
                 case shinyokohama = "3"
@@ -212,6 +212,17 @@ public struct DepartureInfo: Codable {
                     case .kagoshimachuo:
                         return "鹿児島中央"
                     }
+                }
+                
+                public static var sortedMajorStations: [Self] {
+//                    Set(Self.allCases + [.tokyo, .shinosaka, .nagoya])
+                    var stations = Self.allCases
+                    for (i, st) in [Self.tokyo, .shinosaka, .nagoya, .kyoto, .shinagawa].enumerated() {
+                        if let station = stations.firstIndex(where: {$0 == st}) {
+                            stations.swapAt(station, i)
+                        }
+                    }
+                    return stations
                 }
             }
         }
