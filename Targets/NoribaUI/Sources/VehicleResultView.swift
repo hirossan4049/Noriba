@@ -76,7 +76,6 @@ struct VehicleResultView: View {
     }
     
     func timetableCell(data: DepartureInfo.DepartureInfo.Data) -> some View {
-        print(data)
         return HStack {
             Text("\(data.train.jaName) \(data.trainNumber)号")
                 .frame(width: 100, alignment: .leading)
