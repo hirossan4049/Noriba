@@ -1,10 +1,8 @@
 import SwiftUI
-import NoribaKit
 
 public struct SearchView: View {
     @ObservedObject private var viewModel: SearchViewModel
     @FocusState private var focusedField: Field?
-    @State private var departureInfo: DepartureInfo? = nil
     
     enum Field: Hashable {
         case vehicleNumber
@@ -31,9 +29,6 @@ public struct SearchView: View {
         }
         .navigationTitle("のりば検索")
         .navigationBarTitleDisplayMode(.inline)
-        .task {
-            departureInfo = try! await TrainInfoAPI().fetchDepartureInfo()
-        }
     }
     
     private var vehicleTextField: some View {
@@ -99,7 +94,7 @@ public struct SearchView: View {
         .background(
             NavigationLink(
                 destination: VehicleResultView(trainNumber: viewModel.vehicleNumber,
-                                               departureInfo: departureInfo),
+                                               departureInfo: viewModel.departureInfo),
                 isActive: $viewModel.isPresentVehicleResultView,
                 label: { EmptyView() })
         )

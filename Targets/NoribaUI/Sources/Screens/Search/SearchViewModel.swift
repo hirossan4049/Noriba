@@ -21,6 +21,7 @@ final class SearchViewModel: ObservableObject {
     // MARK: UI State
     @Published var vehicleNumber: String = ""
     @Published var isPresentVehicleResultView = false
+    @Published var departureInfo: DepartureInfo? = nil
     var currentBound: Bound = .hakata
     let bounds = Bound.allCases
     var currentStation: DepartureInfo.DepartureInfo.Data.Station = .shinosaka
@@ -42,11 +43,15 @@ final class SearchViewModel: ObservableObject {
         }
     }
     
-    init() { }
+    init() {
+        Task {
+            self.departureInfo = try! await TrainInfoAPI().fetchDepartureInfo()
+        }
+    }
 }
 
 extension SearchViewModel: SearchViewModelInput {
-    func onSearchTapped() {        
+    func onSearchTapped() {
         isPresentVehicleResultView = true
     }
 }
