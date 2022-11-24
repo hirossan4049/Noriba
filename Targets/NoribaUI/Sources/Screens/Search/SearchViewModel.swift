@@ -12,7 +12,6 @@ import NoribaKit
 // MARK: Input Protocol
 @MainActor
 protocol SearchViewModelInput: ObservableObject {
-    func onSearchTapped()
 }
 
 @MainActor
@@ -20,7 +19,6 @@ final class SearchViewModel: ObservableObject {
     
     // MARK: UI State
     @Published var vehicleNumber: String = ""
-    @Published var isPresentVehicleResultView = false
     @Published var departureInfo: DepartureInfo? = nil
     @Published var currentBound: Bound = .hakata
     @Published var currentStation: DepartureInfo.DepartureInfo.Data.Station = .shinosaka
@@ -35,9 +33,6 @@ final class SearchViewModel: ObservableObject {
 }
 
 extension SearchViewModel: SearchViewModelInput {
-    func onSearchTapped() {
-        isPresentVehicleResultView = true
-    }
 }
 
 extension DepartureInfo.DepartureInfo.Data.Station: Identifiable {
