@@ -7,11 +7,11 @@
 
 import Foundation
 
-public struct DepartureInfo: Codable {
+public struct DepartureInfo: Codable, Hashable {
     public let suspensionInfoIsEnabled: Bool
     public let departureInfo: DepartureInfo
     
-    public struct DepartureInfo: Codable {
+    public struct DepartureInfo: Codable, Hashable {
         public let datetime: Int
         public let data: [Data]
         
@@ -34,7 +34,7 @@ public struct DepartureInfo: Codable {
             public let departureOrder: Int
             public let partialSuspensionFlag: Bool
             
-            public enum Train: String, Codable {
+            public enum Train: String, Codable, Hashable {
                 case hikari = "1"
                 case kodama = "2"
                 case nozomi = "6"

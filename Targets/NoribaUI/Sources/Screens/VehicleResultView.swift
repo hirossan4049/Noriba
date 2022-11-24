@@ -8,7 +8,7 @@
 import SwiftUI
 import NoribaKit
 
-struct VehicleResultView: View {
+public struct VehicleResultView: View {
     
     let trainNumber: String
     let departureInfo: DepartureInfo?
@@ -21,7 +21,7 @@ struct VehicleResultView: View {
 
     }
     
-    var body: some View {
+    public var body: some View {
         VStack {
             Spacer()
                 .frame(height: 24)

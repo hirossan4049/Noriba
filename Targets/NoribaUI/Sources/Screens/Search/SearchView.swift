@@ -81,24 +81,16 @@ public struct SearchView: View {
     }
     
     private var searchButton: some View {
-        Button {
-            viewModel.onSearchTapped()
-        } label: {
+        NavigationLink(value: VehicleResultNavigation(trainNumber: viewModel.vehicleNumber,
+                                                      departureInfo: viewModel.departureInfo),
+                       label: {
             Text("検索")
                 .fontWeight(.bold)
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity, maxHeight: 24)
                 .padding()
                 .background(Color.pink.cornerRadius(8))
-        }
-        .background(
-            NavigationLink(
-                destination: VehicleResultView(trainNumber: viewModel.vehicleNumber,
-                                               departureInfo: viewModel.departureInfo),
-                isActive: $viewModel.isPresentVehicleResultView,
-                label: { EmptyView() })
-        )
-        
+        })
     }
 }
 
