@@ -67,11 +67,11 @@ public struct SearchView: View {
                    label: EmptyView(),
                    content: {
                 ForEach(viewModel.stations) { station in
-                    Text(station.stationName).tag(station)
+                    Text("\(station.stationName)駅").tag(station)
                 }
             })
         } label: {
-            Text(viewModel.currentStation.stationName)
+            Text("\(viewModel.currentStation.stationName)駅")
                 .fontWeight(.bold)
                 .foregroundColor(Color("Label"))
                 .frame(maxWidth: .infinity, maxHeight: 24, alignment: .leading)
