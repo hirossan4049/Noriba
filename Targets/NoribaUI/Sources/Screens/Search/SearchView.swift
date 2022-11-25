@@ -32,7 +32,7 @@ public struct SearchView: View {
     }
     
     private var vehicleTextField: some View {
-        TextField("車両番号", text: $viewModel.vehicleNumber)
+        TextField("列車番号", text: $viewModel.vehicleNumber)
             .keyboardType(.numberPad)
             .focused($focusedField, equals: .vehicleNumber)
             .frame(maxWidth: .infinity, maxHeight: 24, alignment: .leading)
