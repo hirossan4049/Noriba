@@ -6,12 +6,12 @@
 //
 
 
-enum Bound: String, CaseIterable {
+public enum Bound: String, CaseIterable {
     case hakata = "2"
     case tokyo = "1"
 //    case zyoge = "3"
     
-    var title: String {
+    public var title: String {
         switch self {
         case .hakata:
             return "博多方面（下り）"

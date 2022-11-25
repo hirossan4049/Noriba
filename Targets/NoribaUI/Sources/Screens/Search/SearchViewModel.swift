@@ -19,17 +19,12 @@ final class SearchViewModel: ObservableObject {
     
     // MARK: UI State
     @Published var vehicleNumber: String = ""
-    @Published var departureInfo: DepartureInfo? = nil
     @Published var currentBound: Bound = .hakata
     @Published var currentStation: DepartureInfo.DepartureInfo.Data.Station = .shinosaka
     let bounds = Bound.allCases
     let stations = DepartureInfo.DepartureInfo.Data.Station.sortedMajorStations
     
-    init() {
-        Task {
-            self.departureInfo = try! await TrainInfoAPI().fetchDepartureInfo()
-        }
-    }
+    init() { }
 }
 
 extension SearchViewModel: SearchViewModelInput {

@@ -12,5 +12,6 @@ public struct VehicleResultNavigation: Identifiable, Hashable {
     public let id = UUID()
     
     public let trainNumber: String
-    public let departureInfo: DepartureInfo?
+    public let bound: Bound
+    public let station: DepartureInfo.DepartureInfo.Data.Station
 }

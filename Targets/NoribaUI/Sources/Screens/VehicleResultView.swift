@@ -10,15 +10,16 @@ import NoribaKit
 
 public struct VehicleResultView: View {
     
-    let trainNumber: String
-    let departureInfo: DepartureInfo?
-    private let resultTrainData: DepartureInfo.DepartureInfo.Data?
+    private let trainNumber: String
+    private let bound: Bound
+    private let station: DepartureInfo.DepartureInfo.Data.Station
+    @State private var departureInfo: DepartureInfo? = nil
+    @State private var resultTrainData: DepartureInfo.DepartureInfo.Data? = nil
     
-    public init(trainNumber: String, departureInfo: DepartureInfo?) {
+    public init(trainNumber: String, bound: Bound, station: DepartureInfo.DepartureInfo.Data.Station) {
         self.trainNumber = trainNumber
-        self.departureInfo = departureInfo
-        self.resultTrainData = departureInfo?.departureInfo.data.first(where: { $0.trainNumber == trainNumber })
-
+        self.bound = bound
+        self.station = station
     }
     
     public var body: some View {
@@ -29,18 +30,26 @@ public struct VehicleResultView: View {
                 .padding(.horizontal, 8)
             annotationLabel
             
-            List(departureInfo!.departureInfo.data, id: \.self) { data in
-                timetableCell(data: data)
-                    .listRowInsets(EdgeInsets())
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 4)
-                    .listRowSeparator(.hidden)
+            if let departureInfo {
+                List(departureInfo.departureInfo.data, id: \.self) { data in
+                    timetableCell(data: data)
+                        .listRowInsets(EdgeInsets())
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 4)
+                        .listRowSeparator(.hidden)
+                }
+                .listStyle(.plain)
+            } else {
+                Text("Oops.")
             }
-            .listStyle(.plain)
             
             Spacer()
         }
         .navigationTitle("新幹線のりば検索結果")
+        .task {
+            departureInfo = try! await TrainInfoAPI().fetchDepartureInfo(bound: bound, station: station)
+            resultTrainData = departureInfo?.departureInfo.data.first(where: { $0.trainNumber == trainNumber })
+        }
     }
     
     private var ticket: some View {
@@ -48,7 +57,7 @@ public struct VehicleResultView: View {
             Image("ticketImage")
                 .resizable()
                 .frame(maxWidth: .infinity, maxHeight: 164)
-
+            
             if let resultTrainData {
                 VStack {
                     Spacer()
@@ -138,7 +147,7 @@ extension DepartureInfo.DepartureInfo.Data.Train {
 }
 
 extension String {
-      func leftPadding(toLength: Int, withPad: String) -> String {
+    func leftPadding(toLength: Int, withPad: String) -> String {
         let stringLength = self.count
         if stringLength < toLength {
             return String(repeating:withPad, count: toLength - stringLength) + self

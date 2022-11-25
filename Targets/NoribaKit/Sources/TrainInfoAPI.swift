@@ -11,6 +11,7 @@ public final class TrainInfoAPI {
     private var session = URLSession.shared
     
     private let behave: Behave
+    public typealias Station = DepartureInfo.DepartureInfo.Data.Station
     
     // MARK: public
     
@@ -22,14 +23,18 @@ public final class TrainInfoAPI {
         self.behave = behave
     }
     
-    public func fetchDepartureInfo() async throws -> DepartureInfo {
-//        let (data, _) = try await request(url: "")
+    public func fetchDepartureInfo(bound: Bound,
+                                   station: Station) async throws -> DepartureInfo {
+        let data: Data
+        if behave == .mock {
+            data = TrainInfoAPIMocks.fetchDepartureInfoString.data(using: .utf8)!
+        } else {
+            (data, _) = try await request(url: "https://traininfo.jr-central.co.jp/shinkansen/var/train_info/departure_info_sot_\(station.rawValue)_\(bound.rawValue).json")
+        }
         
-        let data = TrainInfoAPIMocks.fetchDepartureInfoString.data(using: .utf8)!
-        
+
         let decoder = JSONDecoder()
         return try! decoder.decode(DepartureInfo.self, from: data)
-        
     }
     
     // MARK: private

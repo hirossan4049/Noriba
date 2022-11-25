@@ -11,7 +11,8 @@ struct NoribaApp: App {
                 SearchView()
                     .navigationDestination(for: VehicleResultNavigation.self) { nav in
                         VehicleResultView(trainNumber: nav.trainNumber,
-                                          departureInfo: nav.departureInfo)
+                                          bound: nav.bound,
+                                          station: nav.station)
                     }
             }
         }

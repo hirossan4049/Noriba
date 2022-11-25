@@ -82,7 +82,8 @@ public struct SearchView: View {
     
     private var searchButton: some View {
         NavigationLink(value: VehicleResultNavigation(trainNumber: viewModel.vehicleNumber,
-                                                      departureInfo: viewModel.departureInfo),
+                                                      bound: viewModel.currentBound,
+                                                      station: viewModel.currentStation),
                        label: {
             Text("検索")
                 .fontWeight(.bold)
