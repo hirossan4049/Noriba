@@ -15,6 +15,7 @@ public struct VehicleResultView: View {
     private let station: DepartureInfo.DepartureInfo.Data.Station
     @State private var departureInfo: DepartureInfo? = nil
     @State private var resultTrainData: DepartureInfo.DepartureInfo.Data? = nil
+    @State private var isLoading = true
     
     public init(trainNumber: String, bound: Bound, station: DepartureInfo.DepartureInfo.Data.Station) {
         self.trainNumber = trainNumber
@@ -40,7 +41,11 @@ public struct VehicleResultView: View {
                 }
                 .listStyle(.plain)
             } else {
-                Text("Oops.")
+                if isLoading {
+                    ProgressView()
+                } else {
+                    Text("Oops.")
+                }
             }
             
             Spacer()
@@ -49,6 +54,7 @@ public struct VehicleResultView: View {
         .task {
             departureInfo = try! await TrainInfoAPI().fetchDepartureInfo(bound: bound, station: station)
             resultTrainData = departureInfo?.departureInfo.data.first(where: { $0.trainNumber == trainNumber })
+            isLoading = false
         }
     }
     
