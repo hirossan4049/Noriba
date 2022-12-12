@@ -87,7 +87,7 @@ public struct VehicleResultView: View {
                         .font(.system(size: 18, weight: .bold))
                     Spacer()
                     
-                    Text("新大阪駅")
+                    Text("\(station.stationName)駅")
                         .font(.system(size: 18, weight: .bold))
                     
                     HStack {
