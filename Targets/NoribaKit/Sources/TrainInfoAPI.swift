@@ -19,6 +19,11 @@ public final class TrainInfoAPI {
         case mock, `default`
     }
     
+    public enum TrainInfoAPIError: Error {
+        case serviceSuspended
+        case unknown
+    }
+    
     public init(_ behave: Behave = .default) {
         self.behave = behave
     }
@@ -32,9 +37,19 @@ public final class TrainInfoAPI {
             (data, _) = try await request(url: "https://traininfo.jr-central.co.jp/shinkansen/var/train_info/departure_info_sot_\(station.rawValue)_\(bound.rawValue).json")
         }
         
-
-        let decoder = JSONDecoder()
-        return try! decoder.decode(DepartureInfo.self, from: data)
+        do {
+            let decoder = JSONDecoder()
+            return try decoder.decode(DepartureInfo.self, from: data)
+        } catch {
+            let (infoData, _) = try await request(url: "https://traininfo.jr-central.co.jp/shinkansen/common/data/ti99f_ja.json")
+            let decoder = JSONDecoder()
+            let commonInfo = try decoder.decode(CommonInfo.self, from: infoData)
+            if commonInfo.screen.defaultMessage.contains("ご提供を一時停止") {
+                throw TrainInfoAPIError.serviceSuspended
+            } else {
+                throw TrainInfoAPIError.unknown
+            }
+        }
     }
     
     // MARK: private

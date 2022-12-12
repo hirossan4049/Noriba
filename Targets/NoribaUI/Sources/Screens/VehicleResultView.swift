@@ -15,7 +15,14 @@ public struct VehicleResultView: View {
     private let station: DepartureInfo.DepartureInfo.Data.Station
     @State private var departureInfo: DepartureInfo? = nil
     @State private var resultTrainData: DepartureInfo.DepartureInfo.Data? = nil
-    @State private var isLoading = true
+    @State private var status: Status = .isLoading
+    
+    enum Status {
+        case success
+        case isLoading
+        case isServiceSuspended
+        case unknownError
+    }
     
     public init(trainNumber: String, bound: Bound, station: DepartureInfo.DepartureInfo.Data.Station) {
         self.trainNumber = trainNumber
@@ -41,10 +48,21 @@ public struct VehicleResultView: View {
                 }
                 .listStyle(.plain)
             } else {
-                if isLoading {
+                switch status {
+                case .success:
+                    Text("Oops.\nアプリのエラー")
+                        .padding()
+                        .foregroundColor(.gray)
+                case .isLoading:
                     ProgressView()
-                } else {
-                    Text("Oops.")
+                case .isServiceSuspended:
+                    Text("現在サービス一時停止中")
+                        .padding()
+                        .foregroundColor(.gray)
+                case .unknownError:
+                    Text("Oops.\nインターネットに接続されていないか、サーバーが落ちている可能性があります。")
+                        .padding()
+                        .foregroundColor(.gray)
                 }
             }
             
@@ -52,9 +70,7 @@ public struct VehicleResultView: View {
         }
         .navigationTitle("新幹線のりば検索結果")
         .task {
-            departureInfo = try! await TrainInfoAPI().fetchDepartureInfo(bound: bound, station: station)
-            resultTrainData = departureInfo?.departureInfo.data.first(where: { $0.trainNumber == trainNumber })
-            isLoading = false
+            await fetch()
         }
     }
     
@@ -120,6 +136,23 @@ public struct VehicleResultView: View {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy年MM月dd日"
         return formatter.string(from: date)
+    }
+    
+    func fetch() async {
+        do {
+            departureInfo = try await TrainInfoAPI().fetchDepartureInfo(bound: bound, station: station)
+            resultTrainData = departureInfo?.departureInfo.data.first(where: { $0.trainNumber == trainNumber })
+            status = .success
+        } catch let error as TrainInfoAPI.TrainInfoAPIError {
+            switch error {
+            case .serviceSuspended:
+                status = .isServiceSuspended
+            default:
+                status = .unknownError
+            }
+        } catch {
+            status = .unknownError
+        }
     }
     
     func getTrainNumberToData(trainNumber: String, departureInfo info: DepartureInfo?) -> DepartureInfo.DepartureInfo.Data? {
