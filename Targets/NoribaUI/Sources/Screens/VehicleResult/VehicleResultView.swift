@@ -6,28 +6,16 @@
 //
 
 import SwiftUI
+// FIXME: NoribaKitに依存しないようにする
 import NoribaKit
 
 public struct VehicleResultView: View {
-    
-    private let trainNumber: String
-    private let bound: Bound
-    private let station: DepartureInfo.DepartureInfo.Data.Station
-    @State private var departureInfo: DepartureInfo? = nil
-    @State private var resultTrainData: DepartureInfo.DepartureInfo.Data? = nil
-    @State private var status: Status = .isLoading
-    
-    enum Status {
-        case success
-        case isLoading
-        case isServiceSuspended
-        case unknownError
-    }
+    @StateObject var viewModel: VehicleResultViewModel
     
     public init(trainNumber: String, bound: Bound, station: DepartureInfo.DepartureInfo.Data.Station) {
-        self.trainNumber = trainNumber
-        self.bound = bound
-        self.station = station
+        _viewModel = StateObject(wrappedValue: VehicleResultViewModel(trainNumber: trainNumber,
+                                                                      bound: bound,
+                                                                      station: station))
     }
     
     public var body: some View {
@@ -38,7 +26,7 @@ public struct VehicleResultView: View {
                 .padding(.horizontal, 8)
             annotationLabel
             
-            if let departureInfo {
+            if let departureInfo = viewModel.departureInfo {
                 List(departureInfo.departureInfo.data, id: \.self) { data in
                     timetableCell(data: data)
                         .listRowInsets(EdgeInsets())
@@ -48,7 +36,7 @@ public struct VehicleResultView: View {
                 }
                 .listStyle(.plain)
             } else {
-                switch status {
+                switch viewModel.status {
                 case .success:
                     Text("Oops.\nアプリのエラー")
                         .padding()
@@ -70,7 +58,7 @@ public struct VehicleResultView: View {
         }
         .navigationTitle("新幹線のりば検索結果")
         .task {
-            await fetch()
+            await viewModel.onAppear()
         }
     }
     
@@ -80,14 +68,14 @@ public struct VehicleResultView: View {
                 .resizable()
                 .frame(maxWidth: .infinity, maxHeight: 164)
             
-            if let resultTrainData {
+            if let resultTrainData = viewModel.resultTrainData {
                 VStack {
                     Spacer()
                     Text("\(resultTrainData.train.jaName)\(resultTrainData.trainNumber)号 \(resultTrainData.terminalStation.stationName)行")
                         .font(.system(size: 18, weight: .bold))
                     Spacer()
                     
-                    Text("\(station.stationName)駅")
+                    Text("\(viewModel.station.stationName)駅")
                         .font(.system(size: 18, weight: .bold))
                     
                     HStack {
@@ -98,7 +86,7 @@ public struct VehicleResultView: View {
                             .frame(height: 30,alignment: .bottom)
                     }
                     
-                    Text(unixtimeToDate(unixtime: departureInfo?.departureInfo.datetime ?? 0))
+                    Text(unixtimeToDate(unixtime: viewModel.departureInfo?.departureInfo.datetime ?? 0))
                         .font(.system(size: 14, weight: .bold))
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -136,23 +124,6 @@ public struct VehicleResultView: View {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy年MM月dd日"
         return formatter.string(from: date)
-    }
-    
-    func fetch() async {
-        do {
-            departureInfo = try await TrainInfoAPI().fetchDepartureInfo(bound: bound, station: station)
-            resultTrainData = departureInfo?.departureInfo.data.first(where: { $0.trainNumber == trainNumber })
-            status = .success
-        } catch let error as TrainInfoAPI.TrainInfoAPIError {
-            switch error {
-            case .serviceSuspended:
-                status = .isServiceSuspended
-            default:
-                status = .unknownError
-            }
-        } catch {
-            status = .unknownError
-        }
     }
     
     func getTrainNumberToData(trainNumber: String, departureInfo info: DepartureInfo?) -> DepartureInfo.DepartureInfo.Data? {
