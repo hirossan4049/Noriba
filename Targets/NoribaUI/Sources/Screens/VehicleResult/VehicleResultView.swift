@@ -28,7 +28,12 @@ public struct VehicleResultView: View {
             
             if let departureInfo = viewModel.departureInfo {
                 List(departureInfo.departureInfo.data, id: \.self) { data in
-                    timetableCell(data: data)
+                    TimetableCell(trainName: data.train.jaName,
+                                  trainNumber: data.trainNumber,
+                                  stationName: data.terminalStation.stationName,
+                                  trackNumber: data.track,
+                                  departureTime: data.departureTime,
+                                  trainColor: data.train.color)
                         .listRowInsets(EdgeInsets())
                         .padding(.horizontal, 6)
                         .padding(.vertical, 4)
@@ -103,20 +108,6 @@ public struct VehicleResultView: View {
         Text("※JR東海の公開情報に基づいて算出されています。実際ののりばと異なる場合がございます。")
             .font(.system(size: 9, weight: .bold))
             .foregroundColor(.gray)
-    }
-    
-    func timetableCell(data: DepartureInfo.DepartureInfo.Data) -> some View {
-        return HStack {
-            Text("\(data.train.jaName) \(data.trainNumber)号")
-                .frame(width: 100, alignment: .leading)
-            Text("\(data.terminalStation.stationName)行")
-            Spacer()
-            Text("\(data.track)番線")
-            Text("\(String(data.departureTime / 60).leftPadding(toLength: 2, withPad: "0")):\(String(data.departureTime % 60).leftPadding(toLength: 2, withPad: "0"))")
-        }
-        .padding(8)
-        .frame(maxWidth: .infinity, maxHeight: 48)
-        .background(data.train.color.cornerRadius(8))
     }
 }
 
