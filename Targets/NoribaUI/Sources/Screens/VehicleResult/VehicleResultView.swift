@@ -86,7 +86,7 @@ public struct VehicleResultView: View {
                             .frame(height: 30,alignment: .bottom)
                     }
                     
-                    Text(unixtimeToDate(unixtime: viewModel.departureInfo?.departureInfo.datetime ?? 0))
+                    Text(viewModel.unixtimeToDate(unixtime: viewModel.departureInfo?.departureInfo.datetime ?? 0))
                         .font(.system(size: 14, weight: .bold))
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -117,53 +117,6 @@ public struct VehicleResultView: View {
         .padding(8)
         .frame(maxWidth: .infinity, maxHeight: 48)
         .background(data.train.color.cornerRadius(8))
-    }
-    
-    func unixtimeToDate(unixtime: Int) -> String {
-        let date = Date(timeIntervalSince1970: TimeInterval(unixtime))
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy年MM月dd日"
-        return formatter.string(from: date)
-    }
-    
-    func getTrainNumberToData(trainNumber: String, departureInfo info: DepartureInfo?) -> DepartureInfo.DepartureInfo.Data? {
-        info?.departureInfo.data.first(where: { $0.trainNumber == trainNumber })
-    }
-}
-
-extension DepartureInfo.DepartureInfo.Data.Train {
-    public var color: Color {
-        switch self {
-        case .hikari:
-            return .red
-        case .kodama:
-            return .blue
-        case .nozomi:
-            return .yellow
-        case .dantai:
-            return .gray
-        case .kaisou:
-            return .gray
-        case .mizuho:
-            return .blue
-        case .sakura:
-            return .pink
-        case .tubame:
-            return .pink
-        case .unknown:
-            return .gray
-        }
-    }
-}
-
-extension String {
-    func leftPadding(toLength: Int, withPad: String) -> String {
-        let stringLength = self.count
-        if stringLength < toLength {
-            return String(repeating:withPad, count: toLength - stringLength) + self
-        } else {
-            return String(self.suffix(toLength))
-        }
     }
 }
 

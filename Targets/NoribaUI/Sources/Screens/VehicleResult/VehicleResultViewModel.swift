@@ -6,6 +6,7 @@
 //
 import Combine
 import NoribaKit
+import Foundation
 
 public enum VehicleResultViewStatus {
     case success
@@ -20,6 +21,7 @@ protocol VehicleResultViewModelInput {
     var resultTrainData: DepartureInfo.DepartureInfo.Data? { get }
     
     func onAppear() async
+    func unixtimeToDate(unixtime: Int) -> String
 }
 
 public class VehicleResultViewModel: VehicleResultViewModelInput, ObservableObject {
@@ -40,6 +42,13 @@ public class VehicleResultViewModel: VehicleResultViewModelInput, ObservableObje
     // MARK: VehicleResultViewModelInput
     public func onAppear() async {
          await fetch()
+    }
+    
+    public func unixtimeToDate(unixtime: Int) -> String {
+        let date = Date(timeIntervalSince1970: TimeInterval(unixtime))
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy年MM月dd日"
+        return formatter.string(from: date)
     }
     
     // MARK: private
