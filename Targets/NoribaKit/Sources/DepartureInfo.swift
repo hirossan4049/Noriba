@@ -215,7 +215,6 @@ public struct DepartureInfo: Codable, Hashable {
                 }
                 
                 public static var sortedMajorStations: [Self] {
-//                    Set(Self.allCases + [.tokyo, .shinosaka, .nagoya])
                     var stations = Self.allCases
                     for (i, st) in [Self.tokyo, .shinosaka, .nagoya, .kyoto, .shinagawa].enumerated() {
                         if let station = stations.firstIndex(where: {$0 == st}) {
