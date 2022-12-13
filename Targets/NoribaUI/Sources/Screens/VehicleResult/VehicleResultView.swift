@@ -74,26 +74,28 @@ public struct VehicleResultView: View {
                 .frame(maxWidth: .infinity, maxHeight: 164)
             
             if let resultTrainData = viewModel.resultTrainData {
-                VStack {
-                    Spacer()
+                VStack(spacing: 0) {
                     Text("\(resultTrainData.train.jaName)\(resultTrainData.trainNumber)号 \(resultTrainData.terminalStation.stationName)行")
                         .font(.system(size: 18, weight: .bold))
-                    Spacer()
+                        .padding(16)
                     
                     Text("\(viewModel.station.stationName)駅")
                         .font(.system(size: 18, weight: .bold))
+                        .padding(.bottom, 2)
                     
                     HStack {
                         Text("\(resultTrainData.track)番線")
                             .font(.system(size: 34, weight: .bold))
                         Text("※")
                             .font(.system(size: 20))
-                            .frame(height: 30,alignment: .bottom)
+                            .frame(width: 16, height: 32, alignment: .bottom)
                     }
+                    .padding(.leading, 16) // 番線を真ん中に揃えたいため※分を引いている
+                    .padding(.bottom)
                     
                     Text(viewModel.unixtimeToDate(unixtime: viewModel.departureInfo?.departureInfo.datetime ?? 0))
-                        .font(.system(size: 14, weight: .bold))
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.system(size: 13))
+                        .frame(maxWidth: .infinity, alignment: .trailing)
                 }
                 .padding(8)
             } else {
