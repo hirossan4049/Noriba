@@ -11,11 +11,11 @@ extension DepartureInfo.DepartureInfo.Data.Train {
     public var color: Color {
         switch self {
         case .hikari:
-            return .red
+            return Color("Hikari")
         case .kodama:
-            return .blue
+            return Color("Kodama")
         case .nozomi:
-            return .yellow
+            return Color("Nozomi")
         case .dantai:
             return .gray
         case .kaisou:
@@ -23,7 +23,7 @@ extension DepartureInfo.DepartureInfo.Data.Train {
         case .mizuho:
             return .blue
         case .sakura:
-            return .pink
+            return Color("Sakura")
         case .tubame:
             return .pink
         case .unknown:

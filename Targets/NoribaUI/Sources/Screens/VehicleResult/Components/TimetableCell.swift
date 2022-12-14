@@ -19,8 +19,10 @@ struct TimetableCell: View {
         HStack {
             VStack {
                 Text("\(trainName)")
+                    .foregroundColor(.white)
                     .font(.system(size: 16, weight: .bold))
                 Text(trainNumber)
+                    .foregroundColor(.white)
                     .font(.system(size: 13, weight: .bold))
             }
             .frame(width: 72, height: 50, alignment: .center)
