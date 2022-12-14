@@ -8,7 +8,11 @@
 import Foundation
 
 public final class TrainInfoAPI {
-    private var session = URLSession.shared
+    private var session: URLSession {
+        let config = URLSessionConfiguration.default
+        config.requestCachePolicy = .reloadIgnoringLocalCacheData
+        return URLSession(configuration: config)
+    }
     
     private let behave: Behave
     public typealias Station = DepartureInfo.DepartureInfo.Data.Station
