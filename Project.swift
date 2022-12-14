@@ -33,10 +33,11 @@ let project = Project(name: "Noriba",
                         makeAppTargets(name: "Noriba",
                                        platform: .iOS,
                                        dependencies: ["NoribaKit", "NoribaUI"].map { TargetDependency.target(name: $0) })
-                      + makeFrameworkTargets(name: "NoribaKit", platform: .iOS) + makeFrameworkTargets(name: "NoribaUI", platform: .iOS)
+                      + makeFrameworkTargets(name: "NoribaKit", platform: .iOS)
+                      + makeFrameworkTargets(name: "NoribaUI", platform: .iOS, dependencies: [TargetDependency.target(name: "NoribaKit")])
 )
 
-private func makeFrameworkTargets(name: String, platform: Platform) -> [Target] {
+private func makeFrameworkTargets(name: String, platform: Platform, dependencies: [TargetDependency] = []) -> [Target] {
     let sources = Target(name: name,
                          platform: platform,
                          product: .framework,
@@ -44,7 +45,7 @@ private func makeFrameworkTargets(name: String, platform: Platform) -> [Target] 
                          infoPlist: .default,
                          sources: ["Targets/\(name)/Sources/**"],
                          resources: ["Targets/\(name)/Resources/**"],
-                         dependencies: [])
+                         dependencies: dependencies)
     let tests = Target(name: "\(name)Tests",
                        platform: platform,
                        product: .unitTests,
@@ -52,7 +53,7 @@ private func makeFrameworkTargets(name: String, platform: Platform) -> [Target] 
                        infoPlist: .default,
                        sources: ["Targets/\(name)/Tests/**"],
                        resources: [],
-                       dependencies: [.target(name: name)])
+                       dependencies: [.target(name: name)] + dependencies)
     return [sources, tests]
 }
 
