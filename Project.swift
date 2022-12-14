@@ -43,7 +43,7 @@ private func makeFrameworkTargets(name: String, platform: Platform) -> [Target] 
                          bundleId: "com.h1rose.\(name)",
                          infoPlist: .default,
                          sources: ["Targets/\(name)/Sources/**"],
-                         resources: [],
+                         resources: ["Targets/\(name)/Sources/**"],
                          dependencies: [])
     let tests = Target(name: "\(name)Tests",
                        platform: platform,
@@ -59,11 +59,12 @@ private func makeFrameworkTargets(name: String, platform: Platform) -> [Target] 
 private func makeAppTargets(name: String, platform: Platform, dependencies: [TargetDependency]) -> [Target] {
     let platform: Platform = platform
     let infoPlist: [String: InfoPlist.Value] = [
-        "CFBundleShortVersionString": "0.0.2",
+        "CFBundleShortVersionString": "0.0.3",
         "CFBundleVersion": "1",
         "CFBundleDisplayName": "のりば検索",
         "UIMainStoryboardFile": "",
-        "UILaunchStoryboardName": "LaunchScreen"
+        "UILaunchStoryboardName": "LaunchScreen",
+        "ITSAppUsesNonExemptEncryption": "false"
     ]
     
     let mainTarget = Target(
