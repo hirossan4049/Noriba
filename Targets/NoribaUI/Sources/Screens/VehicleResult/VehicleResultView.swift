@@ -61,7 +61,7 @@ public struct VehicleResultView: View {
             
             Spacer()
         }
-        .navigationTitle("新幹線のりば検索結果")
+        .navigationTitle("検索結果")
         .task {
             await viewModel.onAppear()
         }
