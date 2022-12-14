@@ -96,7 +96,7 @@ public struct SearchView: View {
 }
 
 #if DEBUG
-struct SearchView_Previews: PreviewProvider {
+private struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         SearchView()
     }

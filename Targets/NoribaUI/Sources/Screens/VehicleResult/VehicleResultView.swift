@@ -34,10 +34,10 @@ public struct VehicleResultView: View {
                                   trackNumber: data.track,
                                   departureTime: data.departureTime,
                                   trainColor: data.train.color)
-                        .listRowInsets(EdgeInsets())
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 4)
-                        .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets())
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 4)
+                    .listRowSeparator(.hidden)
                 }
                 .listStyle(.plain)
             } else {
@@ -113,16 +113,12 @@ public struct VehicleResultView: View {
     }
 }
 
-//#if DEBUG
-//struct VehicleResultView_Previews: PreviewProvider {
-//    @State private static var departureInfo: DepartureInfo? = nil
-//
-//    static var previews: some View {
-//        if let departureInfo = departureInfo {
-//            return VehicleResultView(trainNumber: "247", departureInfo: departureInfo)
-//        } else {
-//            return Text("Parse Error")
-//        }
-//    }
-//}
-//#endif
+#if DEBUG
+private struct VehicleResultView_Previews: PreviewProvider {
+    static var previews: some View {
+        VehicleResultView(trainNumber: "5",
+                          bound: .hakata,
+                          station: .tokyo)
+    }
+}
+#endif

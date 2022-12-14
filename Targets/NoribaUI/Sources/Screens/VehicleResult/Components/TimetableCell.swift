@@ -50,7 +50,8 @@ struct TimetableCell: View {
     }
 }
 
-struct TimetableCellPreviews: PreviewProvider {
+#if DEBUG
+private struct TimetableCell_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             VStack {
@@ -63,3 +64,4 @@ struct TimetableCellPreviews: PreviewProvider {
         }
     }
 }
+#endif
