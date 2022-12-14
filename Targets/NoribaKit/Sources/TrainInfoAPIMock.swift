@@ -15,7 +15,7 @@ final class TrainInfoAPIMocks: TrainInfoAPIMocksProtocol {
     static var fetchDepartureInfoString: String {
         // /departure_info_sot_{bound}_{station}.json
         // https://traininfo.jr-central.co.jp/shinkansen/var/train_info/departure_info_sot_1_2.json
-        guard let url = Bundle.main.url(forResource: "departureInfoMock", withExtension: "json") else { fatalError() }
+        guard let url = Bundle.module.url(forResource: "departureInfoMock", withExtension: "json") else { fatalError() }
         return try! String(contentsOf: url)
     }
 }
