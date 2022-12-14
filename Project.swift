@@ -43,7 +43,7 @@ private func makeFrameworkTargets(name: String, platform: Platform) -> [Target] 
                          bundleId: "com.h1rose.\(name)",
                          infoPlist: .default,
                          sources: ["Targets/\(name)/Sources/**"],
-                         resources: ["Targets/\(name)/Sources/**"],
+                         resources: ["Targets/\(name)/Resources/**"],
                          dependencies: [])
     let tests = Target(name: "\(name)Tests",
                        platform: platform,
