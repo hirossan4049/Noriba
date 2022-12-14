@@ -35,6 +35,7 @@ struct TimetableCell: View {
 
             Spacer()
             Text("\(trackNumber)")
+                .frame(width: 24, height: 24)
                 .font(.system(size: 17, weight: .bold))
                 .padding(6)
                 .foregroundColor(.black)
@@ -53,11 +54,11 @@ struct TimetableCellPreviews: PreviewProvider {
     static var previews: some View {
         Group {
             VStack {
-                TimetableCell(trainName: "のぞみ", trainNumber: "123", stationName: "新大阪", trackNumber: 13, departureTime: 540, trainColor: .red)
-                TimetableCell(trainName: "のぞみ", trainNumber: "123", stationName: "新大阪", trackNumber: 13, departureTime: 540, trainColor: .blue)
-                TimetableCell(trainName: "のぞみ", trainNumber: "123", stationName: "新大阪", trackNumber: 13, departureTime: 540, trainColor: .yellow)
-                TimetableCell(trainName: "のぞみ", trainNumber: "123", stationName: "新大阪", trackNumber: 13, departureTime: 540, trainColor: .red)
-                TimetableCell(trainName: "のぞみ", trainNumber: "123", stationName: "新大阪", trackNumber: 13, departureTime: 540, trainColor: .red)
+                TimetableCell(trainName: "のぞみ", trainNumber: "123", stationName: "新大阪", trackNumber: 1, departureTime: 540, trainColor: .red)
+                TimetableCell(trainName: "のぞみ", trainNumber: "123", stationName: "新大阪", trackNumber: 10, departureTime: 540, trainColor: .blue)
+                TimetableCell(trainName: "のぞみ", trainNumber: "123", stationName: "新大阪", trackNumber: 11, departureTime: 540, trainColor: .yellow)
+                TimetableCell(trainName: "のぞみ", trainNumber: "123", stationName: "新大阪", trackNumber: 19, departureTime: 540, trainColor: .red)
+                TimetableCell(trainName: "のぞみ", trainNumber: "123", stationName: "新大阪", trackNumber: 59, departureTime: 540, trainColor: .red)
             }
         }
     }
