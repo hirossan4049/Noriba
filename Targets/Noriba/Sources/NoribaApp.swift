@@ -10,9 +10,9 @@ struct NoribaApp: App {
             NavigationStack(path: $path) {
                 SearchView()
                     .navigationDestination(for: VehicleResultNavigation.self) { nav in
-                        VehicleResultView(trainNumber: nav.trainNumber,
-                                          bound: nav.bound,
-                                          station: nav.station)
+                        VehicleResultView(viewModel: VehicleResultViewModel(trainNumber: nav.trainNumber,
+                                                                            bound: nav.bound,
+                                                                            station: nav.station))
                     }
             }
         }

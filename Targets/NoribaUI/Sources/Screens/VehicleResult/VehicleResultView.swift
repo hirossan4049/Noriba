@@ -6,16 +6,12 @@
 //
 
 import SwiftUI
-// FIXME: NoribaKitに依存しないようにする
-import NoribaKit
 
 public struct VehicleResultView: View {
     @StateObject var viewModel: VehicleResultViewModel
     
-    public init(trainNumber: String, bound: Bound, station: DepartureInfo.DepartureInfo.Data.Station) {
-        _viewModel = StateObject(wrappedValue: VehicleResultViewModel(trainNumber: trainNumber,
-                                                                      bound: bound,
-                                                                      station: station))
+    public init(viewModel: VehicleResultViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
     }
     
     public var body: some View {
@@ -26,37 +22,15 @@ public struct VehicleResultView: View {
                 .padding(.horizontal, 8)
             annotationLabel
             
-            if let departureInfo = viewModel.departureInfo {
-                List(departureInfo.departureInfo.data, id: \.self) { data in
-                    TimetableCell(trainName: data.train.jaName,
-                                  trainNumber: data.trainNumber,
-                                  stationName: data.terminalStation.stationName,
-                                  trackNumber: data.track,
-                                  departureTime: data.departureTime,
-                                  trainColor: data.train.color)
-                    .listRowInsets(EdgeInsets())
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 4)
-                    .listRowSeparator(.hidden)
-                }
-                .listStyle(.plain)
-            } else {
-                switch viewModel.status {
-                case .success:
-                    Text("Oops.\nアプリのエラー")
-                        .padding()
-                        .foregroundColor(.gray)
-                case .isLoading:
-                    ProgressView()
-                case .isServiceSuspended:
-                    Text("現在サービス一時停止中")
-                        .padding()
-                        .foregroundColor(.gray)
-                case .unknownError:
-                    Text("Oops.\nインターネットに接続されていないか、サーバーが落ちている可能性があります。")
-                        .padding()
-                        .foregroundColor(.gray)
-                }
+            switch viewModel.status {
+            case .success:
+                timetableView
+            case .isLoading:
+                ProgressView()
+            case .isServiceSuspended:
+                suspendedView
+            case .unknownError:
+                unknownErrorView
             }
             
             Spacer()
@@ -111,14 +85,60 @@ public struct VehicleResultView: View {
             .font(.system(size: 9, weight: .bold))
             .foregroundColor(.gray)
     }
+    
+    // status: success
+    private var timetableView: some View {
+        ScrollViewReader { reader in
+            List {
+                ForEach(0..<viewModel.numberOfRows, id: \.self) { index in
+                    let (data, id) = viewModel.cellForRowAt(section: 0, row: index)
+                    if let data, let id {
+                        TimetableCell(trainName: data.train.jaName,
+                                      trainNumber: data.trainNumber,
+                                      stationName: data.terminalStation.stationName,
+                                      trackNumber: data.track,
+                                      departureTime: data.departureTime,
+                                      trainColor: data.train.color)
+                        .listRowInsets(EdgeInsets())
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 4)
+                        .listRowSeparator(.hidden)
+                        .id(id)
+                    }
+                }
+            }
+            .listStyle(.plain)
+            .onAppear {
+                withAnimation(.linear(duration: 2)) {
+                    if let id = viewModel.getCurrentDateCellId() {
+                        reader.scrollTo(id, anchor: .top)
+                    }
+                }
+            }
+        }
+    }
+    
+    // status: suspended
+    private var suspendedView: some View {
+        Text("現在サービス一時停止中")
+            .padding()
+            .foregroundColor(.gray)
+    }
+    
+    private var unknownErrorView: some View {
+        Text("Oops.\nインターネットに接続されていないか、サーバーが落ちている可能性があります。")
+            .padding()
+            .foregroundColor(.gray)
+    }
 }
 
 #if DEBUG
 private struct VehicleResultView_Previews: PreviewProvider {
     static var previews: some View {
-        VehicleResultView(trainNumber: "5",
-                          bound: .hakata,
-                          station: .tokyo)
+        VehicleResultView(viewModel: VehicleResultViewModel(
+            trainNumber: "5",
+            bound: .hakata,
+            station: .tokyo))
     }
 }
 #endif
